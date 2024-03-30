@@ -1,5 +1,18 @@
 # js-bucket-listing
 
+_Block Public Access_
+
+- go to bucket "permissions"
+- find "block public access"
+- edit the block to unblock all traffic. there should be 4 options you need to disable.
+
+_Static Website Hosting_
+
+- go to bucket "properties"
+- find the "static website hosting" section
+- "enable" static website hosting
+- set "index.html" as the index document
+
 _Bucket Policy:_
 
 ```{
