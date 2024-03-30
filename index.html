@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+    <head>
+        <title>S3 Bucket Contents</title>
+        <script>
+            var bucketName = "js-bucket-listing";
+            var bucketRegion = "us-east-1";
+
+            // Function to list objects in the bucket
+            function listObjects() {
+                var url = `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/`;
+
+                fetch(url)
+                    .then((response) => response.text())
+                    .then((data) => {
+                        var parser = new DOMParser();
+                        var xmlDoc = parser.parseFromString(data, "text/xml");
+                        var contents = xmlDoc.getElementsByTagName("Contents");
+
+                        var objectList = document.getElementById("objectList");
+                        for (var i = 0; i < contents.length; i++) {
+                            var key =
+                                contents[i].getElementsByTagName("Key")[0]
+                                    .textContent;
+                            var listItem = document.createElement("li");
+                            listItem.textContent = key;
+                            objectList.appendChild(listItem);
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            }
+        </script>
+    </head>
+    <body onload="listObjects()">
+        <h1>s3-bucket-listing</h1>
+        <ul id="objectList"></ul>
+    </body>
+</html>
