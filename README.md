@@ -24,7 +24,7 @@ _Static Website Hosting:_
 
 _Bucket Policy:_
 
-- go to bucket "permissions"
+- go to bucket "permissions" enter:
 
 ```{
     "Version": "2012-10-17",
@@ -48,7 +48,7 @@ _Bucket Policy:_
 
 _CORS Policy:_
 
-- go to bucket "permissions"
+- go to bucket "permissions" and enter:
 
 ```
 [
