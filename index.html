@@ -28,7 +28,6 @@
                         var parser = new DOMParser();
                         var xmlDoc = parser.parseFromString(data, "text/xml");
                         var contents = xmlDoc.getElementsByTagName("Contents");
-                        var objectList = document.getElementById("objectList");
                         var tableBody = document.getElementById("tableBody");
 
                         for (var i = 0; i < contents.length; i++) {
@@ -85,7 +84,7 @@
                 <th scope="col" class="text-end">Size (KB)</th>
             </thead>
             <tbody id="tableBody">
-                <!-- content will be added row by row here -->
+                <!-- content will be added row by row here using the listObjects() function above -->
             </tbody>
         </table>
     </body>
