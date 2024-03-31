@@ -1,5 +1,9 @@
 # js-bucket-listing
 
+_Live Example:_
+
+- http://js-bucket-listing.s3-website-us-east-1.amazonaws.com
+
 _Config File:_
 
 - copy "config.js_example" to "config.js"
