@@ -1,5 +1,10 @@
 # js-bucket-listing
 
+_Config File:_
+
+- copy "config.js_example" to "config.js"
+- enter your bucketName and bucketRegion
+
 _Block Public Access:_
 
 - go to bucket "permissions"

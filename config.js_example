@@ -1,4 +1,4 @@
 var config = {
-  bucketName: "",
-  bucketRegion: "",
+  bucketName: "<bucket name>",
+  bucketRegion: "<bucket region>",
 };
