@@ -24,6 +24,8 @@ _Static Website Hosting:_
 
 _Bucket Policy:_
 
+- go to bucket "permissions"
+
 ```{
     "Version": "2012-10-17",
     "Statement": [
@@ -45,6 +47,8 @@ _Bucket Policy:_
 ```
 
 _CORS Policy:_
+
+- go to bucket "permissions"
 
 ```
 [
