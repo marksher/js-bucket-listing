@@ -26,7 +26,8 @@ _Bucket Policy:_
 
 - go to bucket "permissions" enter:
 
-```{
+```
+{
     "Version": "2012-10-17",
     "Statement": [
         {
