@@ -6,6 +6,11 @@
             rel="stylesheet"
             href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
         />
+        <style>
+            body {
+                margin: 30px 100px auto 100px;
+            }
+        </style>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -30,8 +35,15 @@
                             var key =
                                 contents[i].getElementsByTagName("Key")[0]
                                     .textContent;
+
                             var listItem = document.createElement("li");
-                            listItem.textContent = key;
+                            listItem.classList.add("list-group-item");
+
+                            var link = document.createElement("a");
+                            link.href = `https://js-bucket-listing.s3.amazonaws.com/${key}`;
+                            link.textContent = key;
+
+                            listItem.appendChild(link);
                             objectList.appendChild(listItem);
                         }
                     })
