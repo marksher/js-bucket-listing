@@ -28,23 +28,43 @@
                         var parser = new DOMParser();
                         var xmlDoc = parser.parseFromString(data, "text/xml");
                         var contents = xmlDoc.getElementsByTagName("Contents");
-                        console.log(contents);
-
                         var objectList = document.getElementById("objectList");
+                        var tableBody = document.getElementById("tableBody");
+
                         for (var i = 0; i < contents.length; i++) {
+                            bodyRow = document.createElement("tr");
+
                             var key =
                                 contents[i].getElementsByTagName("Key")[0]
                                     .textContent;
-
-                            var listItem = document.createElement("li");
-                            listItem.classList.add("list-group-item");
+                            var size =
+                                contents[i].getElementsByTagName("Size")[0]
+                                    .textContent;
+                            var lastModified =
+                                contents[i].getElementsByTagName(
+                                    "LastModified",
+                                )[0].textContent;
 
                             var link = document.createElement("a");
                             link.href = `https:/${bucketName}.s3.amazonaws.com/${key}`;
                             link.textContent = `${key}`;
 
-                            listItem.appendChild(link);
-                            objectList.appendChild(listItem);
+                            filenameCell = document.createElement("th");
+                            filenameCell.setAttribute("scope", "row");
+                            filenameCell.appendChild(link);
+
+                            modifiedCell = document.createElement("td");
+                            modifiedCell.textContent = `${lastModified}`;
+
+                            sizeCell = document.createElement("td");
+                            sizeCell.classList.add("text-end");
+                            sizeCell.textContent = `${size}`;
+
+                            bodyRow.appendChild(filenameCell);
+                            bodyRow.appendChild(modifiedCell);
+                            bodyRow.appendChild(sizeCell);
+
+                            tableBody.appendChild(bodyRow);
                         }
                     })
                     .catch((error) => {
@@ -55,6 +75,18 @@
     </head>
     <body onload="listObjects()">
         <h3>js-bucket-listing</h3>
-        <ul id="objectList"></ul>
+        <table
+            id="objectTable"
+            class="table-striped table-hover table-bordered table"
+        >
+            <thead>
+                <th scope="col">Filename/Path</th>
+                <th scope="col">Last Modified</th>
+                <th scope="col" class="text-end">Size (KB)</th>
+            </thead>
+            <tbody id="tableBody">
+                <!-- content will be added row by row here -->
+            </tbody>
+        </table>
     </body>
 </html>
