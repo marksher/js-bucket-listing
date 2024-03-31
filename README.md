@@ -52,7 +52,7 @@ _CORS Policy:_
             "GET"
         ],
         "AllowedOrigins": [
-            "http://<bucket name>>.s3-website-us-east-1.amazonaws.com"
+            "http://<bucket name>.s3-website-us-east-1.amazonaws.com"
         ],
         "ExposeHeaders": []
     }
