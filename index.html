@@ -29,6 +29,7 @@
                         var parser = new DOMParser();
                         var xmlDoc = parser.parseFromString(data, "text/xml");
                         var contents = xmlDoc.getElementsByTagName("Contents");
+                        console.log(contents);
 
                         var objectList = document.getElementById("objectList");
                         for (var i = 0; i < contents.length; i++) {
@@ -40,8 +41,8 @@
                             listItem.classList.add("list-group-item");
 
                             var link = document.createElement("a");
-                            link.href = `https://js-bucket-listing.s3.amazonaws.com/${key}`;
-                            link.textContent = key;
+                            link.href = `https:/${bucketName}.s3.amazonaws.com/${key}`;
+                            link.textContent = `${key}`;
 
                             listItem.appendChild(link);
                             objectList.appendChild(listItem);
