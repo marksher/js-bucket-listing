@@ -16,11 +16,56 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
         <script src="config.js"></script>
         <script>
+            /**
+             * Format bytes as human-readable text.
+             * 
+             * @param bytes Number of bytes.
+             * @param si True to use metric (SI) units, aka powers of 1000. False to use 
+             *           binary (IEC), aka powers of 1024.
+             * @param dp Number of decimal places to display.
+             * 
+             * @return Formatted string.
+             */
+            function humanFileSize(bytes, si=false, dp=1) {
+            const thresh = si ? 1000 : 1024;
+
+            if (Math.abs(bytes) < thresh) {
+                return bytes + ' B';
+            }
+
+            const units = si 
+                ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'] 
+                : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
+            let u = -1;
+            const r = 10**dp;
+
+            do {
+                bytes /= thresh;
+                ++u;
+            } while (Math.round(Math.abs(bytes) * r) / r >= thresh && u < units.length - 1);
+
+
+            return bytes.toFixed(dp) + ' ' + units[u];
+            }
+        </script>
+        <script>
             var bucketName = config.bucketName;
             var bucketRegion = config.bucketRegion;
 
             function listObjects() {
                 var url = `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/`;
+                const queryString = window.location.search;
+                console.log(queryString);
+                const urlParams = new URLSearchParams(queryString);
+                var prefix = urlParams.get('p');
+                if (prefix) {
+                    console.log(prefix);
+                    h3 = document.getElementById("header");
+                    h3.textContent = `Contents of ${prefix}`;
+                } else {
+                    h3 = document.getElementById("header");
+                    h3.textContent = `${bucketName}`;
+                }
 
                 fetch(url)
                     .then((response) => response.text())
@@ -29,6 +74,30 @@
                         var xmlDoc = parser.parseFromString(data, "text/xml");
                         var contents = xmlDoc.getElementsByTagName("Contents");
                         var tableBody = document.getElementById("tableBody");
+
+                        if (prefix) {
+                            bodyRow = document.createElement("tr");
+                            var link = document.createElement("a");
+                            link.href = `http://${bucketName}.s3-website-${bucketRegion}.amazonaws.com/`;
+                            link.textContent = `..`;
+                            
+                            filenameCell = document.createElement("th");
+                            filenameCell.setAttribute("scope", "row");
+                            filenameCell.appendChild(link);
+
+                            modifiedCell = document.createElement("td");
+                            modifiedCell.textContent = ``;
+
+                            sizeCell = document.createElement("td");
+                            sizeCell.classList.add("text-end");
+                            sizeCell.textContent = ``;
+
+                            bodyRow.appendChild(filenameCell);
+                            bodyRow.appendChild(modifiedCell);
+                            bodyRow.appendChild(sizeCell);
+
+                            tableBody.appendChild(bodyRow);
+                        }
 
                         for (var i = 0; i < contents.length; i++) {
                             bodyRow = document.createElement("tr");
@@ -44,8 +113,36 @@
                                     "LastModified",
                                 )[0].textContent;
 
+                            // never show these files
+                            if (key == 'config.js') {
+                                continue;
+                            }
+                            if (key == 'index.html') {
+                                continue;
+                            }
+
+                            console.log(key);
+
+                            // if prefix is set, only show files that match that prefix
+                            if (prefix) {
+                                if ((!key.startsWith(prefix)) || (key == prefix)) {
+                                    console.log(` skipping ${key}`);
+                                    continue;
+                                }
+                            } else {
+                                // if no prefix is set, only show top level directories
+                                if (!key.endsWith('/')) {
+                                    continue;
+                                }
+                            }
+
                             var link = document.createElement("a");
-                            link.href = `https:/${bucketName}.s3.amazonaws.com/${key}`;
+                            if (key.endsWith('/')) {
+                                link.href = `http://${bucketName}.s3-website-${bucketRegion}.amazonaws.com/?p=${key}`;
+                            } else {
+                                link.href = `https://${bucketName}.s3.amazonaws.com/${key}`;
+                            }
+
                             link.textContent = `${key}`;
 
                             filenameCell = document.createElement("th");
@@ -57,7 +154,11 @@
 
                             sizeCell = document.createElement("td");
                             sizeCell.classList.add("text-end");
-                            sizeCell.textContent = `${size}`;
+                            if (key.endsWith('/')) {
+                                sizeCell.textContent = ``;
+                            } else {
+                                sizeCell.textContent = `${humanFileSize(size)}`;
+                            }
 
                             bodyRow.appendChild(filenameCell);
                             bodyRow.appendChild(modifiedCell);
@@ -73,7 +174,7 @@
         </script>
     </head>
     <body onload="listObjects()">
-        <h3>js-bucket-listing</h3>
+        <h3 id="header">js-bucket-listing</h3>
         <table
             id="objectTable"
             class="table-striped table-hover table-bordered table"
