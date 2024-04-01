@@ -55,11 +55,11 @@
             function listObjects() {
                 var url = `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/`;
                 const queryString = window.location.search;
-                console.log(queryString);
+                // console.log(queryString);
                 const urlParams = new URLSearchParams(queryString);
                 var prefix = urlParams.get('p');
                 if (prefix) {
-                    console.log(prefix);
+                    // console.log(prefix);
                     h3 = document.getElementById("header");
                     h3.textContent = `Contents of ${prefix}`;
                 } else {
@@ -121,12 +121,12 @@
                                 continue;
                             }
 
-                            console.log(key);
+                            //console.log(key);
 
                             // if prefix is set, only show files that match that prefix
                             if (prefix) {
                                 if ((!key.startsWith(prefix)) || (key == prefix)) {
-                                    console.log(` skipping ${key}`);
+                                    // console.log(` skipping ${key}`);
                                     continue;
                                 }
                             } else {
