@@ -18,34 +18,36 @@
         <script>
             /**
              * Format bytes as human-readable text.
-             * 
+             *
              * @param bytes Number of bytes.
-             * @param si True to use metric (SI) units, aka powers of 1000. False to use 
+             * @param si True to use metric (SI) units, aka powers of 1000. False to use
              *           binary (IEC), aka powers of 1024.
              * @param dp Number of decimal places to display.
-             * 
+             *
              * @return Formatted string.
              */
-            function humanFileSize(bytes, si=false, dp=1) {
-            const thresh = si ? 1000 : 1024;
+            function humanFileSize(bytes, si = false, dp = 1) {
+                const thresh = si ? 1000 : 1024;
 
-            if (Math.abs(bytes) < thresh) {
-                return bytes + ' B';
-            }
+                if (Math.abs(bytes) < thresh) {
+                    return bytes + " B";
+                }
 
-            const units = si 
-                ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'] 
-                : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
-            let u = -1;
-            const r = 10**dp;
+                const units = si
+                    ? ["kB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
+                    : ["KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"];
+                let u = -1;
+                const r = 10 ** dp;
 
-            do {
-                bytes /= thresh;
-                ++u;
-            } while (Math.round(Math.abs(bytes) * r) / r >= thresh && u < units.length - 1);
+                do {
+                    bytes /= thresh;
+                    ++u;
+                } while (
+                    Math.round(Math.abs(bytes) * r) / r >= thresh &&
+                    u < units.length - 1
+                );
 
-
-            return bytes.toFixed(dp) + ' ' + units[u];
+                return bytes.toFixed(dp) + " " + units[u];
             }
         </script>
         <script>
@@ -57,7 +59,7 @@
                 const queryString = window.location.search;
                 // console.log(queryString);
                 const urlParams = new URLSearchParams(queryString);
-                var prefix = urlParams.get('p');
+                var prefix = urlParams.get("p");
                 if (prefix) {
                     // console.log(prefix);
                     h3 = document.getElementById("header");
@@ -80,7 +82,7 @@
                             var link = document.createElement("a");
                             link.href = `http://${bucketName}.s3-website-${bucketRegion}.amazonaws.com/`;
                             link.textContent = `..`;
-                            
+
                             filenameCell = document.createElement("th");
                             filenameCell.setAttribute("scope", "row");
                             filenameCell.appendChild(link);
@@ -114,30 +116,26 @@
                                 )[0].textContent;
 
                             // never show these files
-                            if (key == 'config.js') {
+                            var ignoreFiles = config.ignoreFiles;
+                            if (ignoreFiles.includes(key)) {
                                 continue;
                             }
-                            if (key == 'index.html') {
-                                continue;
-                            }
-
-                            //console.log(key);
 
                             // if prefix is set, only show files that match that prefix
                             if (prefix) {
-                                if ((!key.startsWith(prefix)) || (key == prefix)) {
+                                if (!key.startsWith(prefix) || key == prefix) {
                                     // console.log(` skipping ${key}`);
                                     continue;
                                 }
                             } else {
                                 // if no prefix is set, only show top level directories
-                                if (!key.endsWith('/')) {
+                                if (!key.endsWith("/")) {
                                     continue;
                                 }
                             }
 
                             var link = document.createElement("a");
-                            if (key.endsWith('/')) {
+                            if (key.endsWith("/")) {
                                 link.href = `http://${bucketName}.s3-website-${bucketRegion}.amazonaws.com/?p=${key}`;
                             } else {
                                 link.href = `https://${bucketName}.s3.amazonaws.com/${key}`;
@@ -154,7 +152,7 @@
 
                             sizeCell = document.createElement("td");
                             sizeCell.classList.add("text-end");
-                            if (key.endsWith('/')) {
+                            if (key.endsWith("/")) {
                                 sizeCell.textContent = ``;
                             } else {
                                 sizeCell.textContent = `${humanFileSize(size)}`;
@@ -182,7 +180,7 @@
             <thead>
                 <th scope="col">Filename/Path</th>
                 <th scope="col">Last Modified</th>
-                <th scope="col" class="text-end">Size (bytes)</th>
+                <th scope="col" class="text-end">Size</th>
             </thead>
             <tbody id="tableBody">
                 <!-- content will be added row by row here using the listObjects() function above -->
